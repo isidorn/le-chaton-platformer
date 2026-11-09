@@ -1,0 +1,49 @@
+/* LE CHATON — Mistral orange palette UI */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: #160A02;
+  background-image:
+    radial-gradient(ellipse at 50% 120%, #FA500F 0%, #3A1C00 45%, #160A02 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Courier New", monospace;
+  overflow: hidden;
+}
+
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#game {
+  /* chunky pixels: low-res canvas scaled up, no smoothing */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: min(92vw, 480px);
+  height: auto;
+  aspect-ratio: 3 / 4;
+  border: 4px solid #FF8205;
+  outline: 2px solid #241005;
+  box-shadow:
+    0 0 0 4px #FFD800,
+    0 0 32px 6px rgba(255, 130, 5, 0.55),
+    0 0 90px 12px rgba(250, 80, 15, 0.35);
+  background: #160A02;
+  touch-action: none;
+  cursor: pointer;
+}
+
+#hint {
+  color: #FFAF00;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #241005;
+  user-select: none;
+  text-align: center;
+}
