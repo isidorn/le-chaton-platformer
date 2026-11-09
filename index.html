@@ -3,17 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="FAT CAT CLIMB (Le Chaton) — a fat orange cat pixel platformer. Jump platform to platform, up up up. Fall off the bottom and it's game over. Mistral orange palette, pure vanilla JS + canvas.">
 <meta name="theme-color" content="#120800">
-<title>FAT CAT CLIMB</title>
+<title>FAT CAT CLIMB · Le Chaton</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23120800'/%3E%3Cpath d='M3 8V2l4 3h2l4-3v6z' fill='%23FF8205'/%3E%3Crect x='3' y='8' width='10' height='6' fill='%23FF8205'/%3E%3Crect x='5' y='10' width='2' height='2' fill='%23241005'/%3E%3Crect x='9' y='10' width='2' height='2' fill='%23241005'/%3E%3Crect x='7' y='13' width='2' height='1' fill='%23FF8FA3'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="stars stars-a" aria-hidden="true"></div>
+  <div class="stars stars-b" aria-hidden="true"></div>
+
   <div id="wrap">
     <h1 id="title">FAT CAT CLIMB</h1>
     <div id="stage">
       <canvas id="game" width="480" height="270"></canvas>
+      <i class="rivet tl" aria-hidden="true"></i>
+      <i class="rivet tr" aria-hidden="true"></i>
+      <i class="rivet bl" aria-hidden="true"></i>
+      <i class="rivet br" aria-hidden="true"></i>
     </div>
-    <p id="hint">&#8592; &#8594; / A D to move &nbsp;&middot;&nbsp; SPACE to jump &nbsp;&middot;&nbsp; R to restart</p>
+    <p id="hint"><kbd>&#8592;</kbd><kbd>&#8594;</kbd> / <kbd>A</kbd><kbd>D</kbd> move &nbsp;&middot;&nbsp; <kbd>SPACE</kbd> jump &nbsp;&middot;&nbsp; <kbd>R</kbd> restart &nbsp;&middot;&nbsp; <kbd>M</kbd> mute</p>
+    <p id="badge">&#10022; le chaton &middot; mistral orange arcade &middot; &#10022;</p>
   </div>
 
   <script src="js/art.js"></script>

@@ -1,9 +1,18 @@
 /* ==========================================================================
-   FAT CAT CLIMB — arcade shell styling
-   Palette: Mistral orange
+   FAT CAT CLIMB — "Mistral sunset arcade" shell
+   Palette: Mistral orange brand ramp
+   #FFD800 -> #FFAF00 -> #FF8205 -> #FA500F -> #E10500
    ========================================================================== */
 
 :root {
+  /* mistral brand ramp */
+  --m-yellow:      #FFD800;
+  --m-amber:       #FFAF00;
+  --m-orange:      #FF8205;
+  --m-dark:        #FA500F;
+  --m-red:         #E10500;
+
+  /* warm arcade neutrals */
   --orange:        #FF7000;
   --orange-light:  #FF9E3D;
   --orange-mid:    #FFB25E;
@@ -37,9 +46,10 @@ body {
   justify-content: center;
   background-color: var(--darkest);
   background-image:
-    radial-gradient(ellipse 120% 80% at 50% 108%, rgba(255, 112, 0, 0.30) 0%, rgba(194, 78, 0, 0.14) 38%, rgba(18, 8, 0, 0) 72%),
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(138, 50, 0, 0.35) 0%, rgba(18, 8, 0, 0) 70%),
+    radial-gradient(ellipse 130% 90% at 50% 112%, rgba(225, 5, 0, 0.22) 0%, rgba(250, 80, 15, 0.16) 26%, rgba(194, 78, 0, 0.10) 46%, rgba(18, 8, 0, 0) 72%),
+    radial-gradient(ellipse 90% 60% at 50% -12%, rgba(138, 50, 0, 0.38) 0%, rgba(18, 8, 0, 0) 70%),
     linear-gradient(180deg, var(--near-black) 0%, var(--darkest) 55%, #1c0d02 100%);
+  background-attachment: fixed;
   font-family: "Courier New", Courier, monospace;
   color: var(--pale);
   -webkit-font-smoothing: none;
@@ -50,10 +60,44 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Layout: title / stage / hint stacked, stage takes the remaining height
+   Twinkling pixel starfield, two parallax layers drifting slowly upward
+   -------------------------------------------------------------------------- */
+
+.stars {
+  position: fixed;
+  inset: -60% -60%;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+}
+
+.stars-a {
+  background-image:
+    radial-gradient(1px 1px at 24px 36px, rgba(255, 210, 63, 0.9) 50%, transparent 51%),
+    radial-gradient(1px 1px at 120px 90px, rgba(255, 227, 184, 0.7) 50%, transparent 51%),
+    radial-gradient(2px 1px at 190px 150px, rgba(255, 158, 61, 0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70px 180px, rgba(255, 244, 224, 0.55) 50%, transparent 51%);
+  background-size: 240px 240px;
+  animation: drift 90s linear infinite, twinkle 4.5s ease-in-out infinite;
+}
+
+.stars-b {
+  background-image:
+    radial-gradient(1px 1px at 60px 20px, rgba(255, 175, 0, 0.75) 50%, transparent 51%),
+    radial-gradient(2px 2px at 150px 110px, rgba(255, 130, 5, 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 210px 60px, rgba(255, 210, 63, 0.65) 50%, transparent 51%),
+    radial-gradient(1px 1px at 30px 140px, rgba(255, 227, 184, 0.45) 50%, transparent 51%);
+  background-size: 340px 340px;
+  animation: drift 140s linear infinite reverse, twinkle 6s ease-in-out infinite 1.2s;
+}
+
+/* --------------------------------------------------------------------------
+   Layout: title / stage / hint / badge stacked, stage takes remaining height
    -------------------------------------------------------------------------- */
 
 #wrap {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,27 +108,44 @@ body {
   padding: clamp(8px, 2vh, 24px) clamp(8px, 2vw, 24px);
 }
 
+/* --------------------------------------------------------------------------
+   Title: Mistral gradient pixel letters with a chunky drop shadow, gently
+   bobbing. Uses drop-shadow filters because the fill itself is a gradient.
+   -------------------------------------------------------------------------- */
+
 #title {
   flex: 0 0 auto;
   font-family: "Courier New", Courier, monospace;
-  font-size: clamp(15px, 3.4vh, 34px);
+  font-size: clamp(18px, 4.2vh, 42px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: clamp(2px, 0.55vw, 7px);
   text-transform: uppercase;
   text-align: center;
-  color: var(--orange);
-  text-shadow:
-    2px 2px 0 var(--deep),
-    4px 4px 0 var(--brown),
-    6px 6px 0 var(--dark-brown),
-    0 0 18px rgba(255, 112, 0, 0.55);
   white-space: nowrap;
+  background: linear-gradient(
+    180deg,
+    var(--m-yellow) 0%,
+    var(--m-amber) 32%,
+    var(--m-orange) 62%,
+    var(--m-dark) 86%,
+    var(--m-red) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter:
+    drop-shadow(2px 2px 0 var(--deep))
+    drop-shadow(4px 4px 0 var(--brown))
+    drop-shadow(7px 7px 0 rgba(74, 34, 0, 0.9))
+    drop-shadow(0 0 18px rgba(255, 112, 0, 0.45));
+  animation: bob 3.4s ease-in-out infinite;
 }
 
 /* Stage is the flexing box; the canvas is contained inside it so the
    aspect ratio is always preserved no matter the window shape. */
 #stage {
+  position: relative;
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
@@ -94,7 +155,8 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Canvas: fill the stage, keep 16:9, chunky pixels
+   Canvas: the arcade cabinet screen — pulsing orange glow, chunky bezel,
+   scanlines on top of the playfield
    -------------------------------------------------------------------------- */
 
 #game {
@@ -110,39 +172,110 @@ body {
 
   background-color: var(--darkest);
   border: 3px solid var(--deep);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow:
     0 0 0 2px var(--near-black),
     0 0 0 5px rgba(255, 112, 0, 0.22),
     0 0 26px 4px rgba(255, 112, 0, 0.30),
     0 0 70px 14px rgba(194, 78, 0, 0.22),
     inset 0 0 40px rgba(18, 8, 0, 0.9);
+  animation: glow-pulse 3.6s ease-in-out infinite;
   touch-action: none;
   outline: none;
+  cursor: pointer;
 }
 
+/* scanlines hugging the playfield */
+#stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 6px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(18, 8, 0, 0.20) 0px,
+    rgba(18, 8, 0, 0.20) 1px,
+    rgba(18, 8, 0, 0) 1px,
+    rgba(18, 8, 0, 0) 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* cabinet corner rivets */
+.rivet {
+  position: absolute;
+  z-index: 6;
+  width: 7px;
+  height: 7px;
+  background: linear-gradient(180deg, var(--m-amber), var(--m-dark));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 244, 224, 0.7),
+    inset 0 -1px 1px rgba(18, 8, 0, 0.8),
+    0 0 6px rgba(255, 130, 5, 0.8);
+  pointer-events: none;
+}
+.rivet.tl { top: 7px; left: 7px; }
+.rivet.tr { top: 7px; right: 7px; }
+.rivet.bl { bottom: 7px; left: 7px; }
+.rivet.br { bottom: 7px; right: 7px; }
+
 /* --------------------------------------------------------------------------
-   Footer hint
+   Footer hint: a pixel "control chip" with key caps
    -------------------------------------------------------------------------- */
 
 #hint {
   flex: 0 0 auto;
+  display: inline-block;
   font-family: "Courier New", Courier, monospace;
   font-size: clamp(9px, 1.5vh, 13px);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-align: center;
   color: var(--pale);
-  opacity: 0.85;
   text-shadow: 1px 1px 0 var(--near-black);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  padding: clamp(5px, 1vh, 9px) clamp(10px, 2vw, 18px);
+  border: 2px solid var(--deep);
+  border-radius: 5px;
+  background: rgba(18, 8, 0, 0.55);
+  box-shadow:
+    0 0 0 2px var(--near-black),
+    0 4px 0 var(--dark-brown),
+    0 0 18px rgba(255, 112, 0, 0.22);
+}
+
+#hint kbd {
+  font: inherit;
+  color: var(--gold);
+  background: var(--near-black);
+  border: 1px solid var(--brown);
+  border-bottom-width: 3px;
+  border-radius: 3px;
+  padding: 0 5px;
+  margin: 0 1px;
+  text-shadow: none;
+}
+
+/* tiny arcade badge under the hint */
+#badge {
+  flex: 0 0 auto;
+  font-size: clamp(8px, 1.2vh, 10px);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 158, 61, 0.55);
+  text-shadow: 1px 1px 0 var(--near-black);
+  white-space: nowrap;
 }
 
 /* --------------------------------------------------------------------------
-   CRT flavour: scanlines + vignette. Purely decorative, never interactive.
+   CRT flavour over the whole screen: scanlines + vignette + warm bloom.
+   Purely decorative, never interactive.
    -------------------------------------------------------------------------- */
 
 body::after {
@@ -168,7 +301,6 @@ body::after {
   mix-blend-mode: multiply;
 }
 
-/* Very faint warm bloom over the whole screen for CRT phosphor feel. */
 body::before {
   content: "";
   position: fixed;
@@ -181,6 +313,44 @@ body::before {
     rgba(255, 112, 0, 0.03) 45%,
     rgba(18, 8, 0, 0) 75%
   );
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+   -------------------------------------------------------------------------- */
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 2px var(--near-black),
+      0 0 0 5px rgba(255, 112, 0, 0.22),
+      0 0 26px 4px rgba(255, 112, 0, 0.30),
+      0 0 70px 14px rgba(194, 78, 0, 0.22),
+      inset 0 0 40px rgba(18, 8, 0, 0.9);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px var(--near-black),
+      0 0 0 5px rgba(255, 130, 5, 0.45),
+      0 0 44px 10px rgba(255, 130, 5, 0.45),
+      0 0 110px 26px rgba(250, 80, 15, 0.30),
+      inset 0 0 40px rgba(18, 8, 0, 0.9);
+  }
+}
+
+@keyframes drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 480px; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
